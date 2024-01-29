@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+    .con{
+        background-color: burlywood;
+        margin: auto;
+        width: 30%;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap:10px;
+    }
+    .tcon{
+        width: 70%;
+        margin: auto;
+        
+    }
+    table{
+        width: 100%;
+    }
+    table,th,tr,td{
+        margin-collapse: collapse;
+        border: 2px solid gray;
+
+    }
+    tr:first-child{
+        background-color: burlywood;
+        color: crimson;
+    }
+   </style>
+</head>
+<body>
+    <div class="con">
+        <input type="text" placeholder="enter uid" name="uid"/>
+        <input type="text" placeholder="enter name" name="name"/>
+        <input type="text" placeholder="enter email" name="email"/>
+        <input type="text" placeholder="enter phno" name="phno"/>
+        <button onclick="add()">Add</button>
+<button onclick="update()" style="display: none;">Update</button>
+    </div>
+    <div class="tcon">
+    </div>
+    <script>
+        
+        let tconr=document.getElementsByClassName("tcon")[0]
+        let inpr=document.getElementsByTagName('input')
+        let btnr=document.querySelectorAll(".con button")
+        let eind
+
+    let disp=()=>{
+        let s=""
+        let a=localStorage.getItem('a')
+        if(a!=null)
+        {
+            a=JSON.parse(a)
+        if(a.length!=0)
+        {
+            s="<table><tr><th>UID</th><th>Name</th><th>Email</th><th>Phno</th><th></th><th></th></tr>"
+            for(let i=0;i<a.length;i++)
+            {
+                s=s+`<tr><td>${a[i].uid}</td><td>${a[i].name}</td><td>${a[i].email}</td><td>${a[i].phno}</td><td><button onclick="edit(${i})">edit</button></td><td><button onclick="del(${i})">delete</button></td></tr>`
+            }
+            s=s+'</table>'
+
+        }
+    }
+        tconr.innerHTML=s
+    }
+    let add=()=>{
+        let obj={}
+        for(let i=0;i<inpr.length;i++)
+        {
+            obj={...obj,[inpr[i].name]:inpr[i].value}
+            inpr[i].value=""
+        }
+let a=localStorage.getItem('a')
+if(a==null)
+{
+    a=[]
+}
+else
+{
+    a=JSON.parse(a)
+}
+        a.push(obj)
+        localStorage.setItem("a",JSON.stringify(a))
+        disp()
+     }
+ let edit=(ind)=>{
+        let a=JSON.parse(localStorage.getItem('a'))
+        for(let i=0;i<inpr.length;i++)
+        {
+            inpr[i].value=a[ind][inpr[i].name]
+        }
+        btnr[0].style.display="none"
+        btnr[1].style.display="inline-block"
+        eind=ind
+
+    }
+    let update=()=>{
+        let obj={}
+        let a=JSON.parse(localStorage.getItem('a'))
+        for(let i=0;i<inpr.length;i++)
+        {
+            obj={...obj,[inpr[i].name]:inpr[i].value}
+            inpr[i].value=""
+        }
+        a[eind]=obj
+        localStorage.setItem("a",JSON.stringify(a))
+        disp()
+        btnr[0].style.display="inline-block"
+        btnr[1].style.display="none"
+         }
+    let del=(ind)=>{
+        let a=JSON.parse(localStorage.getItem('a'))
+        a.splice(ind,1)
+        localStorage.setItem("a",JSON.stringify(a))
+        disp()
+    }
+    disp()
+    </script>
+</body>
+</html>
